@@ -3,16 +3,16 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\tbl_product;
+use App\Models\tbl_bank;
 
 class ProductController extends Controller
 {
      //For Post
 
-     function Product(Request $req) {
+     function bank(Request $req) {
     
-        $Product= new tbl_product;
-        $Product->product_name=$req->product_name;
+        $Product= new tbl_bank;
+        $Product->bank_name=$req->bank_name;
         $result=$Product->save();
         if($result)
         {
@@ -26,8 +26,8 @@ class ProductController extends Controller
 
     //For Get
    
-    function productdetail($id=null){
-        return $id?tbl_product::find($id):tbl_product::all();
+    function banklist($id=null){
+        return $id?tbl_bank::find($id):tbl_bank::all();
     }
 
 }

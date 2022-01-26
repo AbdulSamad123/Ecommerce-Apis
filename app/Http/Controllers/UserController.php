@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\tbl_user;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -14,7 +15,9 @@ class UserController extends Controller
         $SingUp= new tbl_user;
         $SingUp->name=$req->name;
         $SingUp->email=$req->email;
-        $SingUp->password=$req->password;
+        $SingUp->phone_number=$req->phone_number;
+        $SingUp->password=Hash::make($req->password);
+        $SingUp->con_password=Hash::make($req->con_password);
         $result=$SingUp->save();
         if($result)
         {
@@ -32,11 +35,13 @@ class UserController extends Controller
 
     function editprofile(Request $req) {
     
-        $editprofile= tbl_user::find($req->id);
-        $editprofile->name=$req->name;
-        $editprofile->email=$req->email;
-        $editprofile->password=$req->password;
-        $result=$editprofile->save();
+        $abc= tbl_user::find($req->id);
+        $abc->name=$req->name;
+        $abc->email=$req->email;
+        $abc->phone_number=$req->phone_number;
+        $abc->password=$req->password;
+        $abc->con_password=$req->con_password;
+        $result=$abc->save();
         if($result)
         {
             return ["result"=>"Data has been Update"];
@@ -45,6 +50,19 @@ class UserController extends Controller
         {
             return ["result"=>"Operation Fail"];
         }
+    }
+
+    function login(Request $req)
+    {
+        $user =tbl_user::where('email',$req->email)->first();
+        if(!$user || !Hash::check($req->password,$user->password))
+        {
+            return response([
+                'error'=>["Email or password is not matched"]
+            ]);
+        }
+
+        return $user;
     }
     
 }
